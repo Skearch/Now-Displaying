@@ -13,16 +13,16 @@ namespace NowDisplaying
 {
     public partial class TrackDisplayWindow : Window
     {
-        private readonly SpotifyClient _spotifyClient;
-        private readonly ConfigFile _configFile;
+        private readonly SpotifyClient spotifyClient;
+        private readonly ConfigFile configFile;
         private DisplayMedia LastMedia;
 
         public TrackDisplayWindow(SpotifyClient spotifyClient, ConfigFile configFile)
         {
             InitializeComponent();
 
-            _spotifyClient = spotifyClient ?? throw new ArgumentNullException(nameof(spotifyClient));
-            _configFile = configFile ?? throw new ArgumentNullException(nameof(configFile));
+            this.spotifyClient = spotifyClient ?? throw new ArgumentNullException(nameof(spotifyClient));
+            this.configFile = configFile ?? throw new ArgumentNullException(nameof(configFile));
 
             Loaded += Window_Loaded;
         }
@@ -31,7 +31,9 @@ namespace NowDisplaying
         {
             try
             {
-                SetWindowToDisplay(_configFile.DisplayIndex);
+                this.ShowInTaskbar = false;
+
+                SetWindowToDisplay(configFile.Settings.DisplayIndex);
                 StartBackgroundAnimation();
                 _ = PlaybackWatcher();
             }
@@ -113,7 +115,7 @@ namespace NowDisplaying
             {
                 try
                 {
-                    var currentlyPlaying = await _spotifyClient.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
+                    var currentlyPlaying = await spotifyClient.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
 
                     switch (currentlyPlaying.Item)
                     {
@@ -184,8 +186,8 @@ namespace NowDisplaying
                 pbAlbumCover.RenderTransformOrigin = new Point(0, 1);
 
                 var scaleUpStoryboard = new Storyboard();
-                var scaleUpXAnimation = new DoubleAnimation(1.8, TimeSpan.FromSeconds(0.7));
-                var scaleUpYAnimation = new DoubleAnimation(1.8, TimeSpan.FromSeconds(0.7));
+                var scaleUpXAnimation = new DoubleAnimation(1.8, TimeSpan.FromSeconds(0.5));
+                var scaleUpYAnimation = new DoubleAnimation(1.8, TimeSpan.FromSeconds(0.5));
                 Storyboard.SetTarget(scaleUpXAnimation, pbAlbumCover);
                 Storyboard.SetTarget(scaleUpYAnimation, pbAlbumCover);
                 Storyboard.SetTargetProperty(scaleUpXAnimation, new PropertyPath("RenderTransform.ScaleX"));
@@ -240,8 +242,8 @@ namespace NowDisplaying
                 pbAlbumCoverFadeOutStoryboard.Completed += (s, e) =>
                 {
                     var scaleDownStoryboard = new Storyboard();
-                    var scaleDownXAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.7)) { BeginTime = TimeSpan.FromSeconds(1) };
-                    var scaleDownYAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.7)) { BeginTime = TimeSpan.FromSeconds(1) };
+                    var scaleDownXAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5)) { BeginTime = TimeSpan.FromSeconds(1) };
+                    var scaleDownYAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5)) { BeginTime = TimeSpan.FromSeconds(1) };
                     Storyboard.SetTarget(scaleDownXAnimation, pbAlbumCover);
                     Storyboard.SetTarget(scaleDownYAnimation, pbAlbumCover);
                     Storyboard.SetTargetProperty(scaleDownXAnimation, new PropertyPath("RenderTransform.ScaleX"));

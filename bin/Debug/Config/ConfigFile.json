@@ -1,0 +1,17 @@
+{
+  "Spotify": {
+    "RedirectUri": "",
+    "ClientId": "",
+    "ClientSecret": "",
+    "AccessToken": "",
+    "TokenExpiration": ""
+  },
+  "Settings": {
+    "DisplayIndex": 1,
+    "StartOnWindows": false,
+    "MinimizedOnStart": false
+  },
+  "UserInterface": {
+    "BackgroundBlur": 0
+  }
+}
